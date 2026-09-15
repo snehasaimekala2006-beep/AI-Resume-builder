@@ -1,0 +1,331 @@
+﻿/* =========================================================
+   A4 SHEET CONTAINER & PREVIEW STYLING
+   ========================================================= */
+
+.resume-sheet {
+  width: 100%;
+  max-width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  margin: 0 auto;
+  padding: 18mm 18mm;
+  color: #1f2937;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.45;
+  font-size: 9.5pt;
+  box-sizing: border-box;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* Base Resume Elements */
+.resume-section {
+  margin-bottom: 14pt;
+}
+
+.resume-section.is-empty {
+  display: none !important;
+}
+
+.resume-header {
+  margin-bottom: 12pt;
+}
+
+.resume-name {
+  font-size: 20pt;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 3pt;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.resume-title {
+  font-size: 11.5pt;
+  font-weight: 600;
+  margin-bottom: 6pt;
+}
+
+.resume-contact-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6pt 10pt;
+  font-size: 8.5pt;
+  color: #4b5563;
+}
+
+.resume-contact-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3pt;
+}
+
+.resume-contact-item a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.resume-section-title {
+  font-size: 10.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6pt;
+  padding-bottom: 2pt;
+}
+
+.resume-item {
+  margin-bottom: 8pt;
+  page-break-inside: avoid;
+}
+
+.resume-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2pt;
+}
+
+.resume-item-title {
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: #111827;
+}
+
+.resume-item-subtitle {
+  font-size: 9pt;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.resume-item-date {
+  font-size: 8.5pt;
+  color: #6b7280;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.resume-item-body {
+  font-size: 9pt;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.resume-bullet-list {
+  list-style-type: disc;
+  margin-left: 14pt;
+  margin-top: 2pt;
+}
+
+.resume-bullet-list li {
+  margin-bottom: 2pt;
+  line-height: 1.35;
+}
+
+.resume-skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4pt;
+  font-size: 9pt;
+}
+
+.resume-skill-row {
+  display: flex;
+  gap: 6pt;
+}
+
+.resume-skill-label {
+  font-weight: 700;
+  min-width: 140pt;
+  color: #1f2937;
+}
+
+.resume-skill-list {
+  color: #374151;
+}
+
+/* =========================================================
+   TEMPLATE 1: CLASSIC ATS
+   ========================================================= */
+.template-classic .resume-name {
+  color: #0f172a;
+}
+.template-classic .resume-title {
+  color: #334155;
+}
+.template-classic .resume-section-title {
+  color: #0f172a;
+  border-bottom: 1.5pt solid #0f172a;
+}
+.template-classic .resume-item-title {
+  color: #0f172a;
+}
+
+/* =========================================================
+   TEMPLATE 2: MODERN PROFESSIONAL
+   ========================================================= */
+.template-modern .resume-header {
+  border-left: 4pt solid #2563eb;
+  padding-left: 10pt;
+  margin-bottom: 14pt;
+}
+.template-modern .resume-name {
+  color: #1e3a8a;
+}
+.template-modern .resume-title {
+  color: #2563eb;
+}
+.template-modern .resume-section-title {
+  color: #1e40af;
+  border-bottom: 1.5pt solid #bfdbfe;
+  display: flex;
+  align-items: center;
+}
+.template-modern .resume-section-title::after {
+  content: "";
+  height: 2pt;
+  background: #2563eb;
+  flex: 1;
+  margin-left: 8pt;
+}
+.template-modern .resume-bullet-list {
+  list-style-type: square;
+}
+
+/* =========================================================
+   TEMPLATE 3: MINIMAL
+   ========================================================= */
+.template-minimal {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding: 16mm 16mm;
+}
+.template-minimal .resume-header {
+  text-align: center;
+  border-bottom: 1pt solid #e5e7eb;
+  padding-bottom: 10pt;
+  margin-bottom: 14pt;
+}
+.template-minimal .resume-contact-bar {
+  justify-content: center;
+}
+.template-minimal .resume-name {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 18pt;
+  color: #111827;
+}
+.template-minimal .resume-title {
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 10.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.template-minimal .resume-section-title {
+  border-bottom: 1pt solid #e5e7eb;
+  color: #374151;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+/* =========================================================
+   TEMPLATE 4: FRESHER / STUDENT
+   ========================================================= */
+.template-fresher .resume-name {
+  color: #0f766e;
+}
+.template-fresher .resume-title {
+  color: #0d9488;
+}
+.template-fresher .resume-section-title {
+  color: #0f766e;
+  border-bottom: 1.5pt solid #99f6e4;
+  background: #f0fdfa;
+  padding: 2pt 6pt;
+  border-radius: 2pt;
+}
+.template-fresher .resume-item-title {
+  color: #115e59;
+}
+.template-fresher .resume-bullet-list {
+  list-style-type: circle;
+}
+
+/* =========================================================
+   TEMPLATE 5: EXECUTIVE
+   ========================================================= */
+.template-executive {
+  font-family: 'Georgia', serif;
+}
+.template-executive .resume-name {
+  font-family: 'Inter', sans-serif;
+  color: #1e1b4b;
+  letter-spacing: 0.01em;
+}
+.template-executive .resume-title {
+  color: #4338ca;
+  font-style: italic;
+}
+.template-executive .resume-section-title {
+  color: #1e1b4b;
+  border-bottom: 2pt solid #4338ca;
+  font-family: 'Inter', sans-serif;
+}
+.template-executive .resume-item-title {
+  color: #1e1b4b;
+}
+
+/* =========================================================
+   PRINT MEDIA STYLES
+   ========================================================= */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 12mm 12mm 12mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .navbar,
+  .mobile-tabs,
+  .input-panel,
+  .modal-backdrop,
+  .toast-container,
+  .no-print {
+    display: none !important;
+  }
+
+  .editor-layout {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .preview-panel {
+    width: 100% !important;
+    background: transparent !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .resume-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+  }
+
+  .resume-section {
+    page-break-inside: auto;
+  }
+
+  .resume-item {
+    page-break-inside: avoid !important;
+  }
+}

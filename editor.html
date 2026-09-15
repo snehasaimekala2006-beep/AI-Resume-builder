@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+
+{% block title %}{{ active_resume.title }} — AI Resume Editor{% endblock %}
+
+{% block content %}
+<!-- Mobile Tab Switcher -->
+<div class="mobile-tabs">
+  <div class="mobile-tab-group">
+    <button type="button" id="mobileTabEdit" class="mobile-tab-btn active">✏️ Edit Details</button>
+    <button type="button" id="mobileTabPrev" class="mobile-tab-btn">👁️ Live Resume</button>
+  </div>
+</div>
+
+<div class="editor-layout">
+  
+  <!-- =========================================================
+       LEFT PANEL: USER INPUT ACCORDION FORMS
+       ========================================================= -->
+  <aside class="input-panel">
+    
+    <!-- Top Bar with Title & AI Quick Action -->
+    <div class="editor-topbar">
+      <div class="resume-title-wrap">
+        <input type="text" id="resumeTitleInput" class="resume-title-input" value="{{ active_resume.title }}" title="Click to rename resume">
+      </div>
+      
+      <div class="editor-quick-actions">
+        <button type="button" class="btn btn-ai btn-sm" onclick="openFullResumeModal()">
+          ✨ Build My Resume with AI
+        </button>
+        <button type="button" class="btn btn-ai-outline btn-sm" onclick="openAtsModal()">
+          🎯 Optimize for Job
+        </button>
+        <button type="button" id="saveResumeBtn" class="btn btn-secondary btn-sm" onclick="saveResume()">
+          💾 Save
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="downloadPdf()">
+          📄 PDF
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="printResume()">
+          🖨️ Print
+        </button>
+      </div>
+    </div>
+
+    <!-- Template Selector Bar -->
+    <div class="template-bar">
+      <span class="template-label">Choose Template:</span>
+      <div class="template-options">
+        <button type="button" class="template-btn {% if active_resume.template == 'classic' %}active{% endif %}" data-template="classic">Classic ATS</button>
+        <button type="button" class="template-btn {% if active_resume.template == 'modern' %}active{% endif %}" data-template="modern">Modern Professional</button>
+        <button type="button" class="template-btn {% if active_resume.template == 'minimal' %}active{% endif %}" data-template="minimal">Minimal</button>
+        <button type="button" class="template-btn {% if active_resume.template == 'fresher' %}active{% endif %}" data-template="fresher">Fresher / Student</button>
+        <button type="button" class="template-btn {% if active_resume.template == 'executive' %}active{% endif %}" data-template="executive">Executive</button>
+      </div>
+    </div>
+
+    <!-- ACCORDION 1: Personal Information -->
+    <div class="accordion-section expanded">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">👤</span>
+          <span class="accordion-title">Personal Information</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="personal_name" class="form-input" placeholder="e.g. Sneha Sai">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Professional Title</label>
+            <input type="text" id="personal_title" class="form-input" placeholder="e.g. Software Developer">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="personal_email" class="form-input" placeholder="e.g. sneha@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" id="personal_phone" class="form-input" placeholder="e.g. +1 (555) 019-2834">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" id="personal_location" class="form-input" placeholder="e.g. San Francisco, CA">
+          </div>
+          <div class="form-group">
+            <label class="form-label">LinkedIn</label>
+            <input type="text" id="personal_linkedin" class="form-input" placeholder="linkedin.com/in/username">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">GitHub</label>
+            <input type="text" id="personal_github" class="form-input" placeholder="github.com/username">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Portfolio / Website</label>
+            <input type="text" id="personal_portfolio" class="form-input" placeholder="myportfolio.dev">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCORDION 2: Professional Summary -->
+    <div class="accordion-section expanded">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">📝</span>
+          <span class="accordion-title">Professional Summary</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="form-group">
+          <div class="ai-actions-row">
+            <button type="button" class="ai-btn-pill" onclick="triggerSummaryGenerate()">✨ Generate</button>
+            <button type="button" class="ai-btn-pill" onclick="triggerSummaryStyle('improve')">✨ Improve</button>
+            <button type="button" class="ai-btn-pill" onclick="triggerSummaryStyle('rewrite')">✨ Rewrite</button>
+            <button type="button" class="ai-btn-pill" onclick="triggerSummaryStyle('shorten')">✨ Shorten</button>
+            <button type="button" class="ai-btn-pill" onclick="triggerSummaryStyle('ats')">✨ Make ATS Friendly</button>
+          </div>
+          <textarea id="summary_text" class="form-textarea" rows="4" placeholder="Write a summary or enter notes, then click ✨ Generate or ✨ Improve..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCORDION 3: Education -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">🎓</span>
+          <span class="accordion-title">Education</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div id="educationContainer"></div>
+        <button type="button" class="add-entry-btn" onclick="addEducationEntry()">+ Add Education</button>
+      </div>
+    </div>
+
+    <!-- ACCORDION 4: Experience -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">💼</span>
+          <span class="accordion-title">Experience</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div id="experienceContainer"></div>
+        <button type="button" class="add-entry-btn" onclick="addExperienceEntry()">+ Add Experience</button>
+      </div>
+    </div>
+
+    <!-- ACCORDION 5: Projects -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">🚀</span>
+          <span class="accordion-title">Projects</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div id="projectsContainer"></div>
+        <button type="button" class="add-entry-btn" onclick="addProjectEntry()">+ Add Project</button>
+      </div>
+    </div>
+
+    <!-- ACCORDION 6: Skills -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">⚡</span>
+          <span class="accordion-title">Skills</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <span style="font-size:0.8rem; color:var(--text-muted);">Organized by technical category</span>
+          <button type="button" id="suggestSkillsBtn" class="ai-btn-pill" onclick="triggerSuggestSkills()">✨ Suggest Skills</button>
+        </div>
+        
+        <!-- Suggestions container (AI Recommendations clearly marked) -->
+        <div id="skillSuggestionsContainer" style="display:none; margin-bottom:1rem;"></div>
+
+        <div id="skillsCategoryContainer"></div>
+      </div>
+    </div>
+
+    <!-- ACCORDION 7: Certifications -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">📜</span>
+          <span class="accordion-title">Certifications</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div id="certificationsContainer"></div>
+        <button type="button" class="add-entry-btn" onclick="addCertificationEntry()">+ Add Certification</button>
+      </div>
+    </div>
+
+    <!-- ACCORDION 8: Achievements -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">🏆</span>
+          <span class="accordion-title">Achievements & Honors</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div id="achievementsContainer"></div>
+        <button type="button" class="add-entry-btn" onclick="addAchievementEntry()">+ Add Achievement</button>
+      </div>
+    </div>
+
+    <!-- ACCORDION 9: Internships -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">🏢</span>
+          <span class="accordion-title">Internships & Training</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div id="internshipsContainer"></div>
+        <button type="button" class="add-entry-btn" onclick="addInternshipEntry()">+ Add Internship</button>
+      </div>
+    </div>
+
+    <!-- ACCORDION 10: Languages -->
+    <div class="accordion-section">
+      <div class="accordion-header">
+        <div class="accordion-title-wrap">
+          <span class="accordion-icon">🌐</span>
+          <span class="accordion-title">Languages</span>
+        </div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-content">
+        <div id="languagesContainer"></div>
+        <button type="button" class="add-entry-btn" onclick="addLanguageEntry()">+ Add Language</button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- =========================================================
+       RIGHT PANEL: LIVE AI RESUME PREVIEW
+       ========================================================= -->
+  <main class="preview-panel">
+    <div id="resumePreviewContainer" class="resume-sheet template-{{ active_resume.template }}">
+      <!-- Live generated content rendered via preview.js -->
+    </div>
+  </main>
+
+</div>
+
+<!-- =========================================================
+     MODAL 1: UNIVERSAL AI SECTION REVIEW MODAL
+     (Enforces: [Use This] [Edit] [Cancel] Rule)
+     ========================================================= -->
+<div id="aiReviewModal" class="modal-backdrop">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span>✨</span>
+        <span id="aiReviewModalTitle">AI Generated Content</span>
+      </div>
+      <button type="button" class="modal-close" onclick="closeAIReviewModal()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Loading State -->
+      <div id="aiReviewLoading" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding:2.5rem 1rem;">
+        <span class="spinner spinner-purple" style="width:28px; height:28px; margin-bottom:1rem;"></span>
+        <div style="font-weight:600; color:var(--ai-purple); font-size:1rem;">✨ AI is writing...</div>
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.35rem;">Polishing tone and aligning with ATS standards</div>
+      </div>
+
+      <!-- Content Box -->
+      <div id="aiReviewContentBox" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.6rem;">
+          Review the AI generated text below. You may edit the text directly before accepting.
+        </p>
+        <textarea id="aiReviewContent" class="form-textarea" rows="6" style="font-size:0.9rem; line-height:1.5;"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeAIReviewModal()">Cancel / Discard</button>
+      <button type="button" class="btn btn-secondary" onclick="editAIReviewContent()">Edit</button>
+      <button type="button" id="aiReviewApplyBtn" class="btn btn-primary" onclick="applyAIReviewContent()">Use This</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     MODAL 2: "BUILD MY RESUME WITH AI" (COMPLETE RESUME AI)
+     ========================================================= -->
+<div id="fullResumeModal" class="modal-backdrop">
+  <div class="modal-dialog" style="max-width: 680px;">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span>✨</span>
+        <span>Build My Resume with AI</span>
+      </div>
+      <button type="button" class="modal-close" onclick="closeFullResumeModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Stage 1: Raw Text Input -->
+      <div id="fullResumeInputStage">
+        <p style="font-size:0.85rem; color:var(--secondary); margin-bottom:0.75rem; line-height:1.45;">
+          Paste your raw notes, biography, or career background below. AI will intelligently extract and organize it into Personal Information, Summary, Education, Skills, Projects, Experience, and Certifications.
+        </p>
+        <textarea id="fullResumeRawText" class="form-textarea" rows="7" placeholder="Example:
+I am Sneha Sai, a B.Tech computer science student at ABC University (2020-2024).
+My email is sneha@example.com and phone is +1 (555) 349-2810.
+I know Python, Java, HTML, CSS and SQL.
+I created Travel Buddy, a website to help users discover hotels and restaurants using Flask and SQLite.
+I completed a software developer internship at ABC Technologies where I fixed bugs and built backend APIs.
+I have a Python certification from Python Institute."></textarea>
+        
+        <div style="margin-top:1rem; display:flex; justify-content:flex-end;">
+          <button type="button" id="fullResumeSubmitBtn" class="btn btn-ai" onclick="processFullResumeAI()">
+            ✨ Process & Review Resume
+          </button>
+        </div>
+      </div>
+
+      <!-- Stage 2: Structured Review Checklist -->
+      <div id="fullResumeReviewStage" style="display:none;">
+        <div id="fullResumeChecklist"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeFullResumeModal()">Discard</button>
+      <button type="button" id="fullResumeApplyBtn" class="btn btn-primary" style="display:none;" onclick="applyFullResumeToState()">
+        Apply to Resume
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     MODAL 3: ATS JOB OPTIMIZATION
+     ========================================================= -->
+<div id="atsModal" class="modal-backdrop">
+  <div class="modal-dialog" style="max-width: 720px;">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span>🎯</span>
+        <span>ATS Resume Optimizer</span>
+      </div>
+      <button type="button" class="modal-close" onclick="closeAtsModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <p style="font-size:0.85rem; color:var(--secondary); margin-bottom:0.75rem;">
+        Paste the target job description to analyze how well your current resume matches the required skills and experience.
+      </p>
+
+      <div class="form-group">
+        <textarea id="jobDescInput" class="form-textarea" rows="5" placeholder="Paste target job description here... (e.g. 'Looking for a Software Developer with experience in Python, Flask, REST APIs, SQL, and Git...')"></textarea>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-bottom:1rem;">
+        <button type="button" id="atsAnalyzeBtn" class="btn btn-ai" onclick="analyzeJobDescription()">
+          Analyze Resume
+        </button>
+      </div>
+
+      <!-- Results Container -->
+      <div id="atsResultsContainer" style="display:none;"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeAtsModal()">Close</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Inject Initial State from Flask -->
+<script>
+  window.initialResumeData = {{ initial_data_json|safe }};
+  window.initialTemplate = "{{ active_resume.template }}";
+  window.activeResumeId = {{ active_resume.id }};
+</script>
+
+<!-- Load Application Scripts -->
+<script src="{{ url_for('static', filename='js/preview.js') }}"></script>
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ai.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ats.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,21 @@
+<!-- Minimal Template Partial -->
+<div class="resume-sheet template-minimal">
+  <header class="resume-header">
+    <h1 class="resume-name">{{ data.personal.name or 'Your Name' }}</h1>
+    {% if data.personal.title %}
+      <div class="resume-title">{{ data.personal.title }}</div>
+    {% endif %}
+    <div class="resume-contact-bar">
+      {% if data.personal.email %}<span class="resume-contact-item">{{ data.personal.email }}</span>{% endif %}
+      {% if data.personal.phone %}<span class="resume-contact-item">{{ data.personal.phone }}</span>{% endif %}
+      {% if data.personal.location %}<span class="resume-contact-item">{{ data.personal.location }}</span>{% endif %}
+    </div>
+  </header>
+
+  {% if data.summary %}
+  <section class="resume-section">
+    <h2 class="resume-section-title">Summary</h2>
+    <div class="resume-item-body">{{ data.summary }}</div>
+  </section>
+  {% endif %}
+</div>

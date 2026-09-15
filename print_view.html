@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ resume.title }} — Print View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/resume.css') }}">
+  <style>
+    @media print {
+      .no-print-bar { display: none !important; }
+    }
+    .no-print-bar {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body style="background: #e2e8f0; padding: 0; margin: 0;">
+
+  <div class="no-print-bar">
+    <div style="font-weight: 600; font-size: 0.95rem;">
+      📄 {{ resume.title }} ({{ template_name|capitalize }} Template)
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <button class="btn btn-secondary btn-sm" onclick="window.close()">Close</button>
+      <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print to PDF</button>
+    </div>
+  </div>
+
+  <div style="padding: 2rem 0;">
+    <div id="resumePreviewContainer" class="resume-sheet template-{{ template_name }}"></div>
+  </div>
+
+  <script>
+    window.resumeData = {{ data|tojson }};
+    window.templateName = "{{ template_name }}";
+  </script>
+  <script src="{{ url_for('static', filename='js/preview.js') }}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPreview(window.resumeData, window.templateName);
+    });
+  </script>
+</body>
+</html>

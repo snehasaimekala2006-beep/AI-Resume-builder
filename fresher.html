@@ -1,0 +1,30 @@
+<!-- Fresher / Student Template Partial -->
+<div class="resume-sheet template-fresher">
+  <header class="resume-header">
+    <h1 class="resume-name">{{ data.personal.name or 'Your Name' }}</h1>
+    {% if data.personal.title %}
+      <div class="resume-title">{{ data.personal.title }}</div>
+    {% endif %}
+    <div class="resume-contact-bar">
+      {% if data.personal.email %}<span class="resume-contact-item">✉️ {{ data.personal.email }}</span>{% endif %}
+      {% if data.personal.phone %}<span class="resume-contact-item">📞 {{ data.personal.phone }}</span>{% endif %}
+      {% if data.personal.github %}<span class="resume-contact-item">💻 {{ data.personal.github }}</span>{% endif %}
+    </div>
+  </header>
+
+  {% if data.education and data.education|length > 0 %}
+  <section class="resume-section">
+    <h2 class="resume-section-title">Education & Academic Background</h2>
+    {% for edu in data.education %}
+      <div class="resume-item">
+        <div class="resume-item-header">
+          <span class="resume-item-title">{{ edu.degree }} — {{ edu.university }}</span>
+          <span class="resume-item-date">{{ edu.startYear }} - {{ edu.endYear }}</span>
+        </div>
+        {% if edu.gpa %}<div style="font-size:8.5pt;"><strong>GPA:</strong> {{ edu.gpa }}</div>{% endif %}
+        {% if edu.description %}<div class="resume-item-body">{{ edu.description }}</div>{% endif %}
+      </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+</div>
